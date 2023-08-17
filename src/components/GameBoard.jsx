@@ -5,6 +5,7 @@ import Menu from "./Menu";
 const API_BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
 
 function GameBoard({ number, goBackMainMenu }) {
+  // STATES
   const [round, setRound] = useState(0);
   const [pokemonList, setPokemonList] = useState([]);
   const [numberPokemon, setNumberPokemon] = useState(number);
@@ -12,6 +13,7 @@ function GameBoard({ number, goBackMainMenu }) {
   const [isGameOver, setIsGameOver] = useState(false);
   const [score, setScore] = useState(0);
 
+  // BEST SCORE STATE
   const initialBestScore = JSON.parse(localStorage.getItem("bestScore")) || 0;
   const [bestScore, setBestScore] = useState(initialBestScore);
 
@@ -19,6 +21,7 @@ function GameBoard({ number, goBackMainMenu }) {
     localStorage.setItem("bestScore", bestScore);
   }, [bestScore]);
 
+  // POKEMON LIST
   useEffect(() => {
     const uniqueNumbers = getRandomNumbers(numberPokemon);
     const fetchPokemon = async () => {
@@ -30,6 +33,7 @@ function GameBoard({ number, goBackMainMenu }) {
     fetchPokemon();
   }, [numberPokemon, round]);
 
+  // INTERNAL FUNCTIONS
   const getNewBoard = (targetPokemonName) => {
     const newScore = score + 1;
     setScore(newScore);
@@ -68,10 +72,15 @@ function GameBoard({ number, goBackMainMenu }) {
     setIsFinishGame(false);
   };
 
+  // RENDER
   return (
     <>
-      <p>{score}</p>
-      <p>{bestScore}</p>
+      <div className="scores-container">
+        <p>
+          Score: {score} / {numberPokemon + score}
+        </p>
+        <p>High Score: {bestScore}</p>
+      </div>
 
       <div className="game-board">
         {pokemonList.map((pokemon) => {
@@ -97,6 +106,7 @@ function GameBoard({ number, goBackMainMenu }) {
   );
 }
 
+// FUNCTIONS
 async function fetchPokemonData(pokemonNumber) {
   try {
     const response = await fetch(`${API_BASE_URL}${pokemonNumber}`, {

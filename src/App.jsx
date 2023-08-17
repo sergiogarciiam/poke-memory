@@ -12,6 +12,8 @@ function App() {
 
   return (
     <div className="page">
+      <h1 className="title">Poke Memory</h1>
+
       {gameState === 0 ? (
         <MainMenu chooseMode={chooseMode}></MainMenu>
       ) : (

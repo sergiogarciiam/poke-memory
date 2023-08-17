@@ -1,0 +1,123 @@
+/* GENERAL */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: #eee;
+  color: #111;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+button {
+  padding: 15px;
+  border-radius: 20px;
+  background-color: #fff;
+  color: #111;
+  border: 1px solid #111;
+  cursor: pointer;
+  transition: transform 200ms;
+  font-size: 1.1rem;
+}
+
+.pokemon-card:hover,
+button:hover {
+  transform: scale(1.1);
+}
+
+.page {
+  position: relative;
+
+  margin-top: 5%;
+  min-width: 200px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+/* MAIN MENU */
+.main-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  border: 1px solid #111;
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 450px;
+}
+
+.main-menu > p {
+  font-size: 1.3rem;
+}
+
+.main-menu a {
+  color: #111;
+}
+
+.main-menu a:hover {
+  text-decoration: none;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 20px;
+  align-self: center;
+}
+
+/* MENU */
+.menu {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px #111;
+  min-width: 450px;
+  padding: 50px;
+
+  border-radius: 15px;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu > h2 {
+  font-size: 2rem;
+}
+
+.menu > p {
+  font-size: 1.5rem;
+}
+
+/* GAME BOARD */
+.game-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.scores-container {
+  display: flex;
+  gap: 20px;
+  font-size: 1.3rem;
+}
+
+.pokemon-card {
+  box-shadow: 0px 0px 5px #111;
+  border-radius: 15px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 200ms;
+}
