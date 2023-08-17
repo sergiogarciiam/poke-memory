@@ -1,7 +1,7 @@
 /* GENERAL */
 @font-face {
   font-family: "Press Start";
-  src: url("../PressStart.ttf") format("truetype");
+  src: url("../fonts/press-start.ttf") format("truetype");
 }
 
 :root {
@@ -146,6 +146,7 @@ button:hover {
   transition: transform 200ms;
 }
 
+/* RESPONSIVE */
 @media screen and (max-width: 600px) {
   .menu {
     min-width: 100px;

@@ -12,7 +12,7 @@ function App() {
 
   return (
     <>
-      <h1 className="title">Poke Memory</h1>
+      <h1 className="title">Poké Memory</h1>
 
       {gameState === 0 ? (
         <MainMenu chooseMode={chooseMode}></MainMenu>
