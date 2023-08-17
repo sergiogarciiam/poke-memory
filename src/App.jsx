@@ -11,7 +11,7 @@ function App() {
   };
 
   return (
-    <div className="page">
+    <>
       <h1 className="title">Poke Memory</h1>
 
       {gameState === 0 ? (
@@ -22,7 +22,7 @@ function App() {
           goBackMainMenu={() => setGameState(0)}
         ></GameBoard>
       )}
-    </div>
+    </>
   );
 }
 

@@ -76,9 +76,7 @@ function GameBoard({ number, goBackMainMenu }) {
   return (
     <>
       <div className="scores-container">
-        <p>
-          Score: {score} / {numberPokemon + score}
-        </p>
+        <p>Score: {score}</p>
         <p>High Score: {bestScore}</p>
       </div>
 
@@ -95,12 +93,15 @@ function GameBoard({ number, goBackMainMenu }) {
         })}
       </div>
       {isFinishGame && (
-        <Menu
-          isGameOver={isGameOver}
-          score={score}
-          prepareNewGame={prepareNewGame}
-          goBackMainMenu={goBackMainMenu}
-        ></Menu>
+        <>
+          <Menu
+            isGameOver={isGameOver}
+            score={score}
+            prepareNewGame={prepareNewGame}
+            goBackMainMenu={goBackMainMenu}
+          ></Menu>
+          <div className="blocker"></div>
+        </>
       )}
     </>
   );
@@ -146,7 +147,6 @@ function getRandomNumbers(count) {
 function isGameComplete(array) {
   const noClickedPokemon = array.filter((pokemon) => !pokemon.click);
 
-  console.log(noClickedPokemon);
   if (noClickedPokemon.length === 0) return true;
   else return false;
 }
