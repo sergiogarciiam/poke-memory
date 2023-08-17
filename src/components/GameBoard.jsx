@@ -1,10 +1,23 @@
 import { useState, useEffect } from "react";
 import Card from "./Card";
+import Menu from "./Menu";
 
 const API_BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
 
-function GameBoard({ numberPokemon, setFinishResult }) {
+function GameBoard({ number, goBackMainMenu }) {
+  const [round, setRound] = useState(0);
   const [pokemonList, setPokemonList] = useState([]);
+  const [numberPokemon, setNumberPokemon] = useState(number);
+  const [isFinishGame, setIsFinishGame] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+
+  const initialBestScore = JSON.parse(localStorage.getItem("bestScore")) || 0;
+  const [bestScore, setBestScore] = useState(initialBestScore);
+
+  useEffect(() => {
+    localStorage.setItem("bestScore", bestScore);
+  }, [bestScore]);
 
   useEffect(() => {
     const uniqueNumbers = getRandomNumbers(numberPokemon);
@@ -15,9 +28,13 @@ function GameBoard({ numberPokemon, setFinishResult }) {
     };
 
     fetchPokemon();
-  }, [numberPokemon]);
+  }, [numberPokemon, round]);
 
   const getNewBoard = (targetPokemonName) => {
+    const newScore = score + 1;
+    setScore(newScore);
+    if (newScore > bestScore) setBestScore(newScore);
+
     const updatedPokemonList = pokemonList.map((pokemon) => {
       if (pokemon.name === targetPokemonName) {
         return { ...pokemon, click: true };
@@ -33,19 +50,50 @@ function GameBoard({ numberPokemon, setFinishResult }) {
     }
   };
 
+  const setFinishResult = (isGameOver) => {
+    setIsFinishGame(true);
+    setIsGameOver(isGameOver);
+  };
+
+  const prepareNewGame = (number) => {
+    if (number === 0) setScore(0);
+
+    if (number === 0 || numberPokemon === 15) {
+      const newRound = round + 1;
+      setRound(newRound);
+    } else {
+      const newNumber = numberPokemon + number;
+      setNumberPokemon(newNumber);
+    }
+    setIsFinishGame(false);
+  };
+
   return (
-    <div className="game-board">
-      {pokemonList.map((pokemon) => {
-        return (
-          <Card
-            key={pokemon.name}
-            pokemon={pokemon}
-            getNewBoard={getNewBoard}
-            setFinishResult={setFinishResult}
-          ></Card>
-        );
-      })}
-    </div>
+    <>
+      <p>{score}</p>
+      <p>{bestScore}</p>
+
+      <div className="game-board">
+        {pokemonList.map((pokemon) => {
+          return (
+            <Card
+              key={pokemon.name}
+              pokemon={pokemon}
+              getNewBoard={getNewBoard}
+              setFinishResult={setFinishResult}
+            ></Card>
+          );
+        })}
+      </div>
+      {isFinishGame && (
+        <Menu
+          isGameOver={isGameOver}
+          score={score}
+          prepareNewGame={prepareNewGame}
+          goBackMainMenu={goBackMainMenu}
+        ></Menu>
+      )}
+    </>
   );
 }
 

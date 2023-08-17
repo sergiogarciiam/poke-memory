@@ -1,21 +1,13 @@
 import { useState } from "react";
 import GameBoard from "./components/GameBoard";
 import MainMenu from "./components/MainMenu";
-import Menu from "./components/Menu";
 
 function App() {
   const [gameState, setGameState] = useState(0);
-  const [isFinishGame, setIsFinishGame] = useState(false);
-  const [isGameOver, setIsGameOver] = useState(false);
 
   const chooseMode = (e) => {
     const mode = e.target.textContent;
     setGameState(getMode(mode));
-  };
-
-  const setFinishResult = (isGameOver) => {
-    setIsFinishGame(true);
-    setIsGameOver(isGameOver);
   };
 
   return (
@@ -23,13 +15,10 @@ function App() {
       {gameState === 0 ? (
         <MainMenu chooseMode={chooseMode}></MainMenu>
       ) : (
-        <>
-          <GameBoard
-            numberPokemon={gameState}
-            setFinishResult={setFinishResult}
-          ></GameBoard>
-          {isFinishGame && <Menu isGameOver={isGameOver}></Menu>}
-        </>
+        <GameBoard
+          number={gameState}
+          goBackMainMenu={() => setGameState(0)}
+        ></GameBoard>
       )}
     </div>
   );
