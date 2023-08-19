@@ -1,43 +1,38 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { usePokemonList } from "../utils/usePokemonList";
+import { isGameComplete, shufflePokemon } from "../utils/gameFunctions";
 import Card from "./Card";
 import Menu from "./Menu";
 
-const API_BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
-
 function GameBoard({ number, goBackMainMenu }) {
   // STATES
-  const [round, setRound] = useState(0);
-  const [pokemonList, setPokemonList] = useState([]);
-  const [numberPokemon, setNumberPokemon] = useState(number);
-  const [isFinishGame, setIsFinishGame] = useState(false);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [score, setScore] = useState(0);
+  const [state, setState] = useState({
+    round: 0,
+    numberPokemon: number,
+    isFinishGame: false,
+    isGameOver: false,
+    score: 0,
+    bestScore: JSON.parse(localStorage.getItem("bestScore")) || 0,
+  });
+  const { pokemonList, setPokemonList } = usePokemonList(
+    state.numberPokemon,
+    state.round
+  );
 
-  // BEST SCORE STATE
-  const initialBestScore = JSON.parse(localStorage.getItem("bestScore")) || 0;
-  const [bestScore, setBestScore] = useState(initialBestScore);
-
+  // USE EFFECT
   useEffect(() => {
-    localStorage.setItem("bestScore", bestScore);
-  }, [bestScore]);
+    localStorage.setItem("bestScore", state.bestScore);
+  }, [state.bestScore]);
 
-  // POKEMON LIST
-  useEffect(() => {
-    const uniqueNumbers = getRandomNumbers(numberPokemon);
-    const fetchPokemon = async () => {
-      const promises = uniqueNumbers.map((number) => fetchPokemonData(number));
-      const fetchedPokemon = await Promise.all(promises);
-      setPokemonList(fetchedPokemon);
-    };
-
-    fetchPokemon();
-  }, [numberPokemon, round]);
-
-  // INTERNAL FUNCTIONS
+  // FUNCTIONS
   const getNewBoard = (targetPokemonName) => {
-    const newScore = score + 1;
-    setScore(newScore);
-    if (newScore > bestScore) setBestScore(newScore);
+    const newScore = state.score + 1;
+
+    if (newScore > state.bestScore) {
+      setState({ ...state, score: newScore, bestScore: newScore });
+    } else {
+      setState({ ...state, score: newScore });
+    }
 
     const updatedPokemonList = pokemonList.map((pokemon) => {
       if (pokemon.name === targetPokemonName) {
@@ -46,38 +41,39 @@ function GameBoard({ number, goBackMainMenu }) {
       return pokemon;
     });
 
-    if (isGameComplete(updatedPokemonList)) {
-      setFinishResult(false);
+    if (isGameComplete(updatedPokemonList)) setFinishResult(false);
+    else setPokemonList(shufflePokemon(updatedPokemonList));
+  };
+
+  const updateGameSettings = (number) => {
+    if (number === 0) {
+      setState({
+        ...state,
+        score: 0,
+        round: state.round + 1,
+        isFinishGame: false,
+      });
+    } else if (state.numberPokemon === 15) {
+      setState({ ...state, round: state.round + 1, isFinishGame: false });
     } else {
-      const newPokemonList = shufflePokemon(updatedPokemonList);
-      setPokemonList(newPokemonList);
+      setState({
+        ...state,
+        numberPokemon: state.numberPokemon + number,
+        isFinishGame: false,
+      });
     }
   };
 
-  const setFinishResult = (isGameOver) => {
-    setIsFinishGame(true);
-    setIsGameOver(isGameOver);
-  };
-
-  const prepareNewGame = (number) => {
-    if (number === 0) setScore(0);
-
-    if (number === 0 || numberPokemon === 15) {
-      const newRound = round + 1;
-      setRound(newRound);
-    } else {
-      const newNumber = numberPokemon + number;
-      setNumberPokemon(newNumber);
-    }
-    setIsFinishGame(false);
+  const setFinishResult = (isOver) => {
+    setState({ ...state, isFinishGame: true, isGameOver: isOver });
   };
 
   // RENDER
   return (
     <>
       <div className="scores-container">
-        <p>Score: {score}</p>
-        <p>High Score: {bestScore}</p>
+        <p>Score: {state.score}</p>
+        <p>High Score: {state.bestScore}</p>
       </div>
 
       <div className="game-board">
@@ -92,12 +88,12 @@ function GameBoard({ number, goBackMainMenu }) {
           );
         })}
       </div>
-      {isFinishGame && (
+      {state.isFinishGame && (
         <>
           <Menu
-            isGameOver={isGameOver}
-            score={score}
-            prepareNewGame={prepareNewGame}
+            isGameOver={state.isGameOver}
+            score={state.score}
+            updateGameSettings={updateGameSettings}
             goBackMainMenu={goBackMainMenu}
           ></Menu>
           <div className="blocker"></div>
@@ -105,61 +101,6 @@ function GameBoard({ number, goBackMainMenu }) {
       )}
     </>
   );
-}
-
-// FUNCTIONS
-async function fetchPokemonData(pokemonNumber) {
-  try {
-    const response = await fetch(`${API_BASE_URL}${pokemonNumber}`, {
-      mode: "cors",
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch data from PokeAPI");
-    }
-
-    const pokemonData = await response.json();
-
-    const pokemon = {
-      name: pokemonData.name,
-      image: pokemonData.sprites.front_default,
-      click: false,
-    };
-
-    return pokemon;
-  } catch (error) {
-    console.error("Error fetching Pokemon data:", error);
-    throw error;
-  }
-}
-
-function getRandomNumbers(count) {
-  const uniqueNumbers = new Set();
-
-  while (uniqueNumbers.size < count) {
-    const randomNumber = Math.floor(Math.random() * 1010) + 1;
-    uniqueNumbers.add(randomNumber);
-  }
-
-  return Array.from(uniqueNumbers);
-}
-
-function isGameComplete(array) {
-  const noClickedPokemon = array.filter((pokemon) => !pokemon.click);
-
-  if (noClickedPokemon.length === 0) return true;
-  else return false;
-}
-
-function shufflePokemon(array) {
-  const shuffledArray = [...array];
-
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-  }
-
-  return shuffledArray;
 }
 
 export default GameBoard;
