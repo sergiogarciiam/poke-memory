@@ -32,7 +32,7 @@ async function fetchPokemonData(pokemonNumber) {
     const pokemonData = await response.json();
 
     const pokemon = {
-      name: pokemonData.name,
+      name: capitalizeFirstLetter(pokemonData.name),
       image: pokemonData.sprites.front_default,
       click: false,
     };
@@ -53,4 +53,8 @@ function getRandomNumbers(count) {
   }
 
   return Array.from(uniqueNumbers);
+}
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
