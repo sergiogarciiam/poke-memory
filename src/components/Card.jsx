@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 function Card({ pokemon, getNewBoard, setFinishResult }) {
   const testPokemon = () => {
     if (!pokemon.click) getNewBoard(pokemon.name);
@@ -11,5 +13,11 @@ function Card({ pokemon, getNewBoard, setFinishResult }) {
     </div>
   );
 }
+
+Card.propTypes = {
+  pokemon: PropTypes.object.isRequired,
+  getNewBoard: PropTypes.func.isRequired,
+  setFinishResult: PropTypes.func.isRequired,
+};
 
 export default Card;

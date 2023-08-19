@@ -1,4 +1,6 @@
-function Menu({ isGameOver, score, updateGameSettings, goBackMainMenu }) {
+import PropTypes from "prop-types";
+
+function Menu({ score, isGameOver, updateGameSettings, goBackMainMenu }) {
   return (
     <div className="menu">
       {isGameOver ? <h2>Game Over</h2> : <h2>You Win!</h2>}
@@ -12,5 +14,12 @@ function Menu({ isGameOver, score, updateGameSettings, goBackMainMenu }) {
     </div>
   );
 }
+
+Menu.propTypes = {
+  score: PropTypes.number.isRequired,
+  isGameOver: PropTypes.func.isRequired,
+  updateGameSettings: PropTypes.func.isRequired,
+  goBackMainMenu: PropTypes.func.isRequired,
+};
 
 export default Menu;

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+
 import { usePokemonList } from "../utils/usePokemonList";
 import { isGameComplete, shufflePokemon } from "../utils/gameFunctions";
+
 import Card from "./Card";
 import Menu from "./Menu";
 
@@ -91,8 +94,8 @@ function GameBoard({ number, goBackMainMenu }) {
       {state.isFinishGame && (
         <>
           <Menu
-            isGameOver={state.isGameOver}
             score={state.score}
+            isGameOver={state.isGameOver}
             updateGameSettings={updateGameSettings}
             goBackMainMenu={goBackMainMenu}
           ></Menu>
@@ -102,5 +105,10 @@ function GameBoard({ number, goBackMainMenu }) {
     </>
   );
 }
+
+GameBoard.propTypes = {
+  number: PropTypes.number.isRequired,
+  goBackMainMenu: PropTypes.func.isRequired,
+};
 
 export default GameBoard;

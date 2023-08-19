@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 function MainMenu({ chooseMode }) {
   return (
     <div className="main-menu">
@@ -19,5 +21,9 @@ function MainMenu({ chooseMode }) {
     </div>
   );
 }
+
+MainMenu.propTypes = {
+  chooseMode: PropTypes.func.isRequired,
+};
 
 export default MainMenu;
