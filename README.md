@@ -25,6 +25,7 @@ Get points by clicking on a pokémon but don't click on any more than once!
 - JavaScript
 - React
 - Vite
+- [PokéAPI](https://pokeapi.co/)
 
 ## Screenshot
 
