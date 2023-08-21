@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API_BASE_URL = "https://pokeapi.co/api/v2/pokemo/";
+const API_BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
 
 export function usePokemonList(numberPokemon, round) {
   const [pokemonList, setPokemonList] = useState([]);
