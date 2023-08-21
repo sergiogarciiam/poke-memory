@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API_BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
+const API_BASE_URL = "https://pokeapi.co/api/v2/pokemo/";
 
 export function usePokemonList(numberPokemon, round) {
   const [pokemonList, setPokemonList] = useState([]);
@@ -39,8 +39,7 @@ async function fetchPokemonData(pokemonNumber) {
 
     return pokemon;
   } catch (error) {
-    console.error("Error fetching Pokemon data:", error);
-    throw error;
+    throw new Error("Error fetching Pokemon data", error);
   }
 }
 
